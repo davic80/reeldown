@@ -119,7 +119,11 @@ const server = http.createServer(async (req, res) => {
     const cookiesFile = join(DATA_DIR, 'cookies.txt')
     const ytdlp = spawn('yt-dlp', [
       '--no-playlist',
+      // H.264 + AAC: compatible con QuickTime/iOS sin re-encodear
+      '-f', 'bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/bestvideo[vcodec^=avc1]+bestaudio/best',
       '--merge-output-format', 'mp4',
+      // faststart: mueve el moov atom al inicio para que QuickTime pueda abrirlo
+      '--postprocessor-args', 'ffmpeg:-c:v copy -c:a copy -movflags +faststart',
       '--quiet',
       '--no-warnings',
       ...(existsSync(cookiesFile) ? ['--cookies', cookiesFile] : []),
