@@ -23,18 +23,23 @@ html, body {
 
 body {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   min-height: 100vh;
-  padding: 1.5rem;
 }
 
 main {
-  width: 100%;
-  max-width: 480px;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
   gap: 2rem;
+}
+
+.hero, .card, .status {
+  width: 100%;
+  max-width: 480px;
 }
 
 .hero {
@@ -150,3 +155,33 @@ button.loading .btn-spinner {
 
 .status.success { color: #4ade80; }
 .status.error   { color: #f87171; }
+
+/* Footer ---------------------------------------------------------------- */
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.coffee {
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 999px;
+  transition: border-color 0.2s;
+}
+
+.coffee:hover {
+  border-color: #dd2a7b;
+}
+
+.version {
+  color: var(--muted);
+}

@@ -116,11 +116,13 @@ const server = http.createServer(async (req, res) => {
     let cancelled = false
     const tmpDir = mkdtempSync(join(tmpdir(), 'rd-'))
 
+    const cookiesFile = join(DATA_DIR, 'cookies.txt')
     const ytdlp = spawn('yt-dlp', [
       '--no-playlist',
       '--merge-output-format', 'mp4',
       '--quiet',
       '--no-warnings',
+      ...(existsSync(cookiesFile) ? ['--cookies', cookiesFile] : []),
       '-o', join(tmpDir, '%(title)s.%(ext)s'),
       igUrl,
     ])

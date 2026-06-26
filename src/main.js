@@ -1,3 +1,7 @@
+import { APP_VERSION } from './version.js'
+
+document.getElementById('version').textContent = `v${APP_VERSION}`
+
 const input = document.getElementById('url-input')
 const btn = document.getElementById('btn-download')
 const status = document.getElementById('status')
