@@ -182,6 +182,11 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { ...statsTotal.get(), recent: statsRecent.all() })
   }
 
+  // /stats → stats.html
+  if (req.method === 'GET' && pathname === '/stats') {
+    return serveStatic('/stats.html', res)
+  }
+
   // Static files (production)
   serveStatic(pathname, res)
 })

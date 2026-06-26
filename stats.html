@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReelDown · Stats</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <style>
+      body { display: block; padding: 0; }
+
+      .stats-wrap {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .stats-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .back {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.2s;
+      }
+      .back:hover { color: var(--text); }
+
+      .stats-nav h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+      }
+
+      .totals {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+      }
+      @media (max-width: 560px) {
+        .totals { grid-template-columns: repeat(2, 1fr); }
+      }
+
+      .total-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.25rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .total-card .label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+      .total-card .value { font-size: 1.75rem; font-weight: 800; }
+      .total-card.success .value { color: #4ade80; }
+      .total-card.error   .value { color: #f87171; }
+
+      .recent h2 {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin-bottom: 0.75rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+      th {
+        text-align: left;
+        color: var(--muted);
+        font-weight: 500;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 0.6rem 0.75rem;
+        border-bottom: 1px solid #1a1a1a;
+        vertical-align: middle;
+      }
+      tr:last-child td { border-bottom: none; }
+      tr:hover td { background: var(--surface); }
+
+      .reel-link {
+        color: var(--text);
+        text-decoration: none;
+        font-family: monospace;
+        font-size: 0.8rem;
+      }
+      .reel-link:hover { color: #dd2a7b; }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .badge.ok  { background: #14532d; color: #4ade80; }
+      .badge.err { background: #450a0a; color: #f87171; }
+
+      .empty { color: var(--muted); text-align: center; padding: 2rem; }
+    </style>
+  </head>
+  <body>
+    <div class="stats-wrap">
+      <nav class="stats-nav">
+        <a class="back" href="/">← ReelDown</a>
+        <h1>Stats</h1>
+        <span style="width:80px"></span>
+      </nav>
+
+      <div class="totals" id="totals">
+        <div class="total-card"><span class="label">Descargas</span><span class="value" id="t-total">—</span></div>
+        <div class="total-card success"><span class="label">Exitosas</span><span class="value" id="t-ok">—</span></div>
+        <div class="total-card error"><span class="label">Fallidas</span><span class="value" id="t-err">—</span></div>
+        <div class="total-card"><span class="label">Servidos</span><span class="value" id="t-bytes">—</span></div>
+      </div>
+
+      <div class="recent">
+        <h2>Últimas descargas</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Reel</th>
+              <th>Fecha</th>
+              <th>Peso</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script type="module" src="/src/stats.js"></script>
+  </body>
+</html>
