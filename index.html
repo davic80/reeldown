@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReelDown</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="hero">
+        <h1>ReelDown</h1>
+        <p class="tagline">Pega el enlace. Haz clic. Magia.</p>
+      </div>
+
+      <div class="card">
+        <input
+          id="url-input"
+          type="url"
+          placeholder="https://www.instagram.com/reel/..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="btn-download" disabled>
+          <span class="btn-text">Magia ✨</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div id="status" class="status" aria-live="polite"></div>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

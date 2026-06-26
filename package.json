@@ -1,0 +1,19 @@
+{
+  "name": "reeldown",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:server": "PORT=3000 DATA_DIR=./.data node server/server.mjs",
+    "build": "vite build",
+    "preview": "vite preview",
+    "setup": "echo 'No server deps needed — uses node:sqlite built-in'"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
+  }
+}

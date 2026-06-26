@@ -1,0 +1,32 @@
+# reeldown — app detrás del Caddy compartido (cloud_default).
+# No incluye Caddy propio: el existente hace reverse_proxy a este contenedor.
+#
+# Pasos:
+#   1) cp .env.example .env  (ajustar REELDOWN_HOST y PROXY_NETWORK si difieren)
+#   2) docker compose -f docker-compose.shared.yml up -d
+#   3) Añadir al Caddyfile de padelscores/cloud:
+#        reels.ojoalprecio.com {
+#            reverse_proxy reeldown:80
+#        }
+#   4) docker exec cloud-caddy-1 caddy reload --config /etc/caddy/Caddyfile
+
+services:
+  reeldown:
+    image: ghcr.io/davic80/reeldown:${REELDOWN_TAG:-latest}
+    restart: unless-stopped
+    expose:
+      - "80"
+    volumes:
+      - reeldown_data:/data
+    networks:
+      proxy:
+        aliases:
+          - reeldown
+
+networks:
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:?set PROXY_NETWORK in .env (e.g. cloud_default)}
+
+volumes:
+  reeldown_data:
