@@ -21,7 +21,7 @@ async function downloadVideo() {
   if (!INSTAGRAM_RE.test(url)) return
 
   setLoading(true)
-  clearStatus()
+  showStatus('Descargando de Instagram…')
 
   try {
     const res = await fetch('/api/download', {
@@ -35,16 +35,33 @@ async function downloadVideo() {
       throw new Error(data.error || 'No se pudo descargar el video.')
     }
 
-    const blob = await res.blob()
+    const total = Number(res.headers.get('Content-Length')) || 0
+    const filename = parseFilename(res.headers.get('Content-Disposition') || '')
+
+    const reader = res.body.getReader()
+    const chunks = []
+    let received = 0
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      chunks.push(value)
+      received += value.length
+      if (total > 0) showStatus(`Recibiendo… ${Math.round(received / total * 100)}%`)
+    }
+
+    const blob = new Blob(chunks, { type: 'video/mp4' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = 'reel.mp4'
+    a.download = filename
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(a.href)
 
-    showStatus('Listo, revisa tus descargas', 'success')
+    input.value = ''
+    btn.disabled = true
+    showStatus('Listo', 'success')
   } catch (err) {
     showStatus(err.message, 'error')
   } finally {
@@ -52,14 +69,21 @@ async function downloadVideo() {
   }
 }
 
+function parseFilename(cd) {
+  const star = cd.match(/filename\*=UTF-8''([^;\s]+)/i)
+  if (star) return decodeURIComponent(star[1])
+  const plain = cd.match(/filename="([^"]+)"/)
+  return plain ? plain[1] : 'reel.mp4'
+}
+
 function setLoading(on) {
   btn.disabled = on
   btn.classList.toggle('loading', on)
 }
 
-function showStatus(msg, type) {
+function showStatus(msg, type = '') {
   status.textContent = msg
-  status.className = `status ${type}`
+  status.className = `status ${type}`.trim()
 }
 
 function clearStatus() {

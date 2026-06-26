@@ -1,7 +1,8 @@
 import http from 'http'
 import { spawn } from 'child_process'
-import { readFileSync, existsSync, mkdirSync } from 'fs'
+import { readFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync } from 'fs'
 import { join, resolve, extname } from 'path'
+import { tmpdir } from 'os'
 import { fileURLToPath } from 'url'
 import { DatabaseSync } from 'node:sqlite'
 
@@ -113,13 +114,14 @@ const server = http.createServer(async (req, res) => {
 
     const start = Date.now()
     let cancelled = false
+    const tmpDir = mkdtempSync(join(tmpdir(), 'rd-'))
 
     const ytdlp = spawn('yt-dlp', [
       '--no-playlist',
       '--merge-output-format', 'mp4',
       '--quiet',
       '--no-warnings',
-      '-o', '-',
+      '-o', join(tmpDir, '%(title)s.%(ext)s'),
       igUrl,
     ])
 
@@ -128,29 +130,43 @@ const server = http.createServer(async (req, res) => {
       ytdlp.kill()
     })
 
-    const chunks = []
-    ytdlp.stdout.on('data', chunk => chunks.push(chunk))
     ytdlp.stderr.on('data', chunk => process.stderr.write(`[yt-dlp] ${chunk}`))
 
+    ytdlp.on('error', () => {
+      rmSync(tmpDir, { recursive: true, force: true })
+      if (!cancelled) json(res, 500, { error: 'yt-dlp no está instalado en el servidor.' })
+    })
+
     ytdlp.on('close', code => {
-      if (cancelled) return
       const duration = Date.now() - start
-      if (code !== 0 || chunks.length === 0) {
+
+      let files = []
+      try { files = readdirSync(tmpDir) } catch {}
+
+      let video = null
+      if (files[0]) {
+        try { video = readFileSync(join(tmpDir, files[0])) } catch {}
+      }
+      rmSync(tmpDir, { recursive: true, force: true })
+
+      if (cancelled) return
+
+      if (code !== 0 || !video) {
         insert.run(igUrl, Date.now(), 0, 0, duration)
         return json(res, 502, { error: '¿Es el reel público? Instagram no dejó descargar el video.' })
       }
-      const body = Buffer.concat(chunks)
-      insert.run(igUrl, Date.now(), 1, body.length, duration)
+
+      // Use yt-dlp's sanitized filename (without extension) as the download name
+      const rawName = files[0].replace(/\.[^.]+$/, '')
+      const encodedName = encodeURIComponent(rawName + '.mp4')
+
+      insert.run(igUrl, Date.now(), 1, video.length, duration)
       res.writeHead(200, {
         'Content-Type': 'video/mp4',
-        'Content-Disposition': 'attachment; filename="reel.mp4"',
-        'Content-Length': body.length,
+        'Content-Disposition': `attachment; filename="reel.mp4"; filename*=UTF-8''${encodedName}`,
+        'Content-Length': video.length,
       })
-      res.end(body)
-    })
-
-    ytdlp.on('error', () => {
-      if (!cancelled) json(res, 500, { error: 'yt-dlp no está instalado en el servidor.' })
+      res.end(video)
     })
     return
   }
