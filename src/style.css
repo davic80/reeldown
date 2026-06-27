@@ -173,6 +173,60 @@ button.loading .btn-spinner {
   box-shadow: 0 2px 16px rgba(221, 42, 123, 0.4);
 }
 
+/* Install tip (Safari manual instructions) ------------------------------ */
+
+.install-tip {
+  position: fixed;
+  top: 3.75rem;
+  right: 1rem;
+  z-index: 100;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 2.25rem 0.75rem 1rem;
+  max-width: 220px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.5;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+.install-tip::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  right: 1.25rem;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid var(--border);
+}
+
+.install-tip strong {
+  color: var(--text);
+}
+
+.tip-close {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.5rem;
+  width: auto;
+  min-height: auto;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  border-radius: 4px;
+}
+
+.tip-close:hover:not(:disabled) {
+  color: var(--text);
+  opacity: 1;
+  transform: none;
+}
+
 /* Install guide --------------------------------------------------------- */
 
 .install-guide {

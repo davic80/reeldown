@@ -29,8 +29,17 @@ if (location.pathname === '/share') {
 // ── Install Prompt ────────────────────────────────────────────────────────────
 
 const isAndroid    = /android/i.test(navigator.userAgent)
+const isIOS        = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+                     (/macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1)
+// Safari fires beforeinstallprompt but prompt() is a no-op — detect to show manual steps
+const isSafari     = /safari/i.test(navigator.userAgent) &&
+                     !/chrome|crios|fxios|android/i.test(navigator.userAgent)
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches
 let installPrompt  = null
+
+const tip        = document.getElementById('install-tip')
+const tipText    = document.getElementById('install-tip-text')
+const btnCloseTip = document.getElementById('btn-close-tip')
 
 if (!isStandalone) {
   window.addEventListener('beforeinstallprompt', (e) => {
@@ -46,10 +55,18 @@ if (!isStandalone) {
 window.addEventListener('appinstalled', () => {
   btnInstall.hidden = true
   guide.hidden = true
+  tip.hidden = true
   installPrompt = null
 })
 
 btnInstall.addEventListener('click', async () => {
+  if (isSafari) {
+    tipText.innerHTML = isIOS
+      ? 'Toca <strong>Compartir ↑</strong> en Safari y elige <strong>Añadir a inicio</strong>'
+      : 'En Safari ve a <strong>Archivo → Añadir al Dock</strong>'
+    tip.hidden = false
+    return
+  }
   if (!installPrompt) return
   installPrompt.prompt()
   const { outcome } = await installPrompt.userChoice
@@ -59,6 +76,8 @@ btnInstall.addEventListener('click', async () => {
     guide.hidden = true
   }
 })
+
+btnCloseTip.addEventListener('click', () => { tip.hidden = true })
 
 btnDismiss.addEventListener('click', () => {
   guide.hidden = true
