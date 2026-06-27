@@ -28,17 +28,31 @@
       </div>
 
       <div class="card">
-        <input
-          id="url-input"
-          type="url"
-          placeholder="https://www.instagram.com/reel/..."
-          autocomplete="off"
-          spellcheck="false"
-        />
-        <button id="btn-download" disabled>
-          <span class="btn-text">Magia ✨</span>
-          <span class="btn-spinner" aria-hidden="true"></span>
-        </button>
+        <div id="panel-input">
+          <input
+            id="url-input"
+            type="url"
+            placeholder="https://www.instagram.com/reel/..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="btn-download" disabled>
+            <span class="btn-text">Magia ✨</span>
+            <span class="btn-spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div id="panel-carousel" hidden>
+          <div class="carousel-bar">
+            <button id="btn-carousel-back" class="carousel-back">← Editar</button>
+            <span id="carousel-label" class="carousel-label"></span>
+          </div>
+          <div id="carousel-grid" class="carousel-grid"></div>
+          <button id="btn-download-all">
+            <span class="btn-text">Descargar todos</span>
+            <span class="btn-spinner" aria-hidden="true"></span>
+          </button>
+        </div>
       </div>
 
       <div id="status" class="status" aria-live="polite"></div>

@@ -99,12 +99,53 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`)
   const { pathname } = url
 
+  // GET /api/info?url=...  — metadata de carrusel sin descargar
+  if (req.method === 'GET' && pathname === '/api/info') {
+    const igUrl = url.searchParams.get('url')?.trim()
+    if (!igUrl || !isInstagramUrl(igUrl)) {
+      return json(res, 400, { error: 'URL de Instagram inválida' })
+    }
+    const cookiesFile = join(DATA_DIR, 'cookies.txt')
+    const ytdlp = spawn('yt-dlp', [
+      '--flat-playlist', '-J', '--quiet', '--no-warnings',
+      ...(existsSync(cookiesFile) ? ['--cookies', cookiesFile] : []),
+      igUrl,
+    ])
+    let out = ''
+    ytdlp.stdout.on('data', chunk => { out += chunk })
+    ytdlp.stderr.on('data', chunk => process.stderr.write(`[yt-dlp info] ${chunk}`))
+    ytdlp.on('error', () => json(res, 500, { error: 'yt-dlp no disponible.' }))
+    ytdlp.on('close', code => {
+      if (code !== 0 || !out) return json(res, 502, { error: 'No se pudo analizar el post.' })
+      try {
+        const data = JSON.parse(out)
+        const entries = data.entries ?? []
+        if (entries.length > 1) {
+          return json(res, 200, {
+            count: entries.length,
+            entries: entries.map((e, i) => ({
+              index: i + 1,
+              title: e.title || `Vídeo ${i + 1}`,
+              thumbnail: e.thumbnail ?? null,
+            })),
+          })
+        }
+        return json(res, 200, { count: 1, entries: [] })
+      } catch {
+        return json(res, 502, { error: 'Respuesta inesperada de yt-dlp.' })
+      }
+    })
+    return
+  }
+
   // POST /api/download
   if (req.method === 'POST' && pathname === '/api/download') {
-    let igUrl
+    let igUrl, index
     try {
       const raw = await readBody(req)
-      igUrl = JSON.parse(raw)?.url?.trim()
+      const body = JSON.parse(raw)
+      igUrl = body?.url?.trim()
+      index = body?.index ?? null
     } catch {
       return json(res, 400, { error: 'Petición inválida' })
     }
@@ -119,7 +160,7 @@ const server = http.createServer(async (req, res) => {
 
     const cookiesFile = join(DATA_DIR, 'cookies.txt')
     const ytdlp = spawn('yt-dlp', [
-      '--no-playlist',
+      '--playlist-items', index != null ? String(index) : '1',
       // H.264 + AAC: compatible con QuickTime/iOS sin re-encodear
       '-f', 'bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/bestvideo[vcodec^=avc1]+bestaudio/best',
       '--merge-output-format', 'mp4',
