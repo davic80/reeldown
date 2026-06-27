@@ -24,7 +24,8 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh;    /* fallback */
+  min-height: 100dvh;   /* iOS Safari: evita scroll por barras del navegador */
 }
 
 main {
@@ -34,7 +35,7 @@ main {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 .hero, .card, .status {
