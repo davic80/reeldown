@@ -169,7 +169,9 @@ const server = http.createServer(async (req, res) => {
       '--quiet',
       '--no-warnings',
       ...(existsSync(cookiesFile) ? ['--cookies', cookiesFile] : []),
-      '-o', join(tmpDir, '%(title)s.%(ext)s'),
+      '-o', join(tmpDir, index != null
+        ? '%(playlist_title,title)s-%(playlist_index)s.%(ext)s'
+        : '%(title)s.%(ext)s'),
       igUrl,
     ])
 
