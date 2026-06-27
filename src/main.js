@@ -173,6 +173,7 @@ function showCarousel() {
   carouselInfo.entries.forEach(entry => {
     carouselGrid.appendChild(buildThumbCard(entry))
   })
+  btnDownAll.hidden = carouselInfo.count <= 1
   panelInput.hidden = true
   panelCarousel.hidden = false
 }
