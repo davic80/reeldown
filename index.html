@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
+    <button id="btn-install" class="btn-install" hidden aria-label="Instalar app">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <line x1="7" y1="1" x2="7" y2="9.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <polyline points="3.5,6.5 7,10 10.5,6.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <line x1="2" y1="13" x2="12" y2="13" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Instalar
+    </button>
+
     <main>
       <div class="hero">
         <h1>ReelDown</h1>
@@ -28,6 +37,25 @@
       </div>
 
       <div id="status" class="status" aria-live="polite"></div>
+
+      <div id="install-guide" class="install-guide" hidden>
+        <button class="guide-close" id="btn-dismiss-guide" aria-label="Cerrar guía">×</button>
+        <p class="guide-title">Úsala directamente desde Instagram</p>
+        <ol class="guide-steps">
+          <li>
+            <span class="guide-num">1</span>
+            <span>Toca <strong>Instalar</strong> (arriba a la derecha) y confirma en el diálogo</span>
+          </li>
+          <li>
+            <span class="guide-num">2</span>
+            <span>En Instagram, abre un reel y toca el botón <strong>Compartir</strong> (la flechita)</span>
+          </li>
+          <li>
+            <span class="guide-num">3</span>
+            <span>Elige <strong>ReelDown</strong> — el video se descarga automáticamente ✨</span>
+          </li>
+        </ol>
+      </div>
     </main>
 
     <footer class="footer">

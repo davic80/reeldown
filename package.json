@@ -1,6 +1,6 @@
 {
   "name": "reeldown",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,12 +8,15 @@
     "dev:server": "PORT=3000 DATA_DIR=./.data node server/server.mjs",
     "build": "vite build",
     "preview": "vite preview",
+    "gen:icons": "npx @vite-pwa/assets-generator --preset minimal-2023 public/icon.svg",
     "setup": "echo 'No server deps needed — uses node:sqlite built-in'"
   },
   "devDependencies": {
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "vite-plugin-pwa": "^1.3.0"
   },
   "allowScripts": {
-    "esbuild@0.25.12": true
+    "esbuild@0.25.12": true,
+    "fsevents@2.3.3": true
   }
 }

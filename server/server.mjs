@@ -48,12 +48,13 @@ function isInstagramUrl(raw) {
 }
 
 const MIME = {
-  '.html': 'text/html; charset=utf-8',
-  '.js':   'application/javascript',
-  '.css':  'text/css',
-  '.svg':  'image/svg+xml',
-  '.ico':  'image/x-icon',
-  '.png':  'image/png',
+  '.html':        'text/html; charset=utf-8',
+  '.js':          'application/javascript',
+  '.css':         'text/css',
+  '.svg':         'image/svg+xml',
+  '.ico':         'image/x-icon',
+  '.png':         'image/png',
+  '.webmanifest': 'application/manifest+json',
 }
 
 function serveStatic(pathname, res) {
