@@ -6,10 +6,10 @@
       <stop offset="100%" stop-color="#8134af"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="96" fill="url(#g)"/>
-  <g stroke="white" stroke-width="52" stroke-linecap="round" stroke-linejoin="round" fill="none">
-    <line x1="256" y1="118" x2="256" y2="300"/>
-    <polyline points="152,228 256,332 360,228"/>
-    <line x1="152" y1="384" x2="360" y2="384"/>
+  <rect width="512" height="512" fill="url(#g)"/>
+  <g stroke="white" stroke-width="68" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <line x1="256" y1="83" x2="256" y2="320"/>
+    <polyline points="121,226 256,361 391,226"/>
+    <line x1="121" y1="429" x2="391" y2="429"/>
   </g>
 </svg>
